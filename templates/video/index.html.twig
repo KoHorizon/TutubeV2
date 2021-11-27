@@ -8,13 +8,20 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'G:/Cour Sup/php/symfony/tutubeV2/src/Controller/VideoController.php'|file_link(0) }}">src/Controller/VideoController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'G:/Cour Sup/php/symfony/tutubeV2/templates/video/index.html.twig'|file_link(0) }}">templates/video/index.html.twig</a></code></li>
-    </ul>
+<div class="">
+    {{ form_start(formVideo) }}
+					{{ form_row(formVideo.ytb_url,{
+						'label': 'Url de la video',
+						'attr': {'class': 'form-control'}
+					}) }}
+					{{ form_row(formVideo.name,{
+						'label': 'Titre'
+					}) }}
+					{{ form_row(formVideo.description,{
+						'label': 'Description de la video',
+					}) }}
+					
+					<button type="submit" class="btn">Ajouter video</button>
+	{{ form_end(formVideo) }}
 </div>
 {% endblock %}
