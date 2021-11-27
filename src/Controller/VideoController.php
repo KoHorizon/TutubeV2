@@ -5,17 +5,16 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-// use Symfony\Component\HttpFoundation\Request;
 
-class MainController extends AbstractController
+class VideoController extends AbstractController
 {
     /**
-     * @Route("/", name="home")
+     * @Route("/video/upload", name="upload_video")
      */
     public function index(): Response
     {
-        return $this->render('main/index.html.twig', [
-            'controller_name' => 'MainController',
+        return $this->render('video/index.html.twig', [
+            'controller_name' => 'VideoController',
         ]);
     }
 }
