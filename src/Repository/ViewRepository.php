@@ -22,6 +22,27 @@ class ViewRepository extends ServiceEntityRepository
     // /**
     //  * @return View[] Returns an array of View objects
     //  */
+
+    public function viewIfExist(int $id_video, string $ip)
+    {
+        $qb = $this->createQueryBuilder('v')
+            ->where('v.video = :video')
+            ->andWhere('v.IP = :ip')
+            ->setParameter('video', $id_video)
+            ->setParameter('ip', $ip);
+        $query = $qb->getQuery();
+        $result = $query->execute();
+
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+
     /*
     public function findByExampleField($value)
     {

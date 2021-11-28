@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Video;
+use App\Entity\View;
 use App\Form\VideoType;
 use App\Repository\VideoRepository;
+use App\Repository\ViewRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,19 +55,34 @@ class VideoController extends AbstractController
     /**
      * @Route("/video/view/{url_id}", name="view_video")
      */
-    public function viewVideo(Request $request, $url_id ,VideoRepository $videoRepo,EntityManagerInterface $entityManager): Response
+    public function viewVideo(Request $request, $url_id ,VideoRepository $videoRepo, ViewRepository $viewRepo ,EntityManagerInterface $entityManager): Response
     {
         $video = $videoRepo->findOneBy(['url_id' => $url_id]);
-
-        if (!$video) {
-            dd('This video does not exist');
+        if (!$video) return dd('This video does not exist');
+        $view = new View;
+        
+        $localIp = $request->getClientIp();
+        $vievOfVideoExist = $viewRepo->viewIfExist($video->getId(),$localIp);
+        
+        if ($vievOfVideoExist == false) {
+            $view->setVideo($video);
+            $view->setIP($localIp);
+            $entityManager->persist($view);
+            $entityManager->flush();
         }
+
+        // dd('dfsdf');
+        // dd($video->getId());
+        // dd($request->getClientIp());
+        
+
+        
 
 
         return $this->render('video/viewVideo.html.twig', [
             'video' => $video,
             'url' => $video->getUrlId(),
-
+            'views' => count($video->getViews()),
         ]);
     }
 
