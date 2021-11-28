@@ -53,7 +53,8 @@ class Video
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $url_id;
+    public $url_id;
+
 
     public function __construct()
     {

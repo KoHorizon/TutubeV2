@@ -15,6 +15,20 @@ use Symfony\Component\HttpFoundation\Request;
 
 class VideoController extends AbstractController
 {
+
+    /**
+     * @Route("/", name="home")
+     */
+    public function home(VideoRepository $videoRepo) 
+    {
+        $last20videos = $videoRepo->last20Videos();
+        // dd($last20videos);
+        // dd($last20videos);
+
+        return $this->render('main/index.html.twig',[
+            'videos' => $last20videos,
+        ]);
+    }
     /**
      * @Route("/video/upload", name="upload_video")
      */
@@ -55,28 +69,21 @@ class VideoController extends AbstractController
     /**
      * @Route("/video/view/{url_id}", name="view_video")
      */
-    public function viewVideo(Request $request, $url_id ,VideoRepository $videoRepo, ViewRepository $viewRepo ,EntityManagerInterface $entityManager): Response
+    public function viewVideo(Request $request, string $url_id ,VideoRepository $videoRepo, ViewRepository $viewRepo ,EntityManagerInterface $entityManager): Response
     {
         $video = $videoRepo->findOneBy(['url_id' => $url_id]);
         if (!$video) return dd('This video does not exist');
-        $view = new View;
-        
         $localIp = $request->getClientIp();
         $vievOfVideoExist = $viewRepo->viewIfExist($video->getId(),$localIp);
-        
+
+        $view = new View;
         if ($vievOfVideoExist == false) {
             $view->setVideo($video);
             $view->setIP($localIp);
             $entityManager->persist($view);
             $entityManager->flush();
+
         }
-
-        // dd('dfsdf');
-        // dd($video->getId());
-        // dd($request->getClientIp());
-        
-
-        
 
 
         return $this->render('video/viewVideo.html.twig', [

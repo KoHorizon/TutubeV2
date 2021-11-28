@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 class MainController extends AbstractController
 {
     /**
-     * @Route("/", name="home")
+     * @Route("/wait", name="homewait")
      */
     public function index(Request $request): Response
     {
