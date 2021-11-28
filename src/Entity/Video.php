@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\VideoRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -42,6 +44,21 @@ class Video
      * @ORM\JoinColumn(nullable=false)
      */
     private $tutuber;
+
+    /**
+     * @ORM\OneToMany(targetEntity=View::class, mappedBy="video", orphanRemoval=true)
+     */
+    private $views;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $url_id;
+
+    public function __construct()
+    {
+        $this->views = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -104,6 +121,48 @@ class Video
     public function setTutuber(?User $tutuber): self
     {
         $this->tutuber = $tutuber;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|View[]
+     */
+    public function getViews(): Collection
+    {
+        return $this->views;
+    }
+
+    public function addView(View $view): self
+    {
+        if (!$this->views->contains($view)) {
+            $this->views[] = $view;
+            $view->setVideo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeView(View $view): self
+    {
+        if ($this->views->removeElement($view)) {
+            // set the owning side to null (unless already changed)
+            if ($view->getVideo() === $this) {
+                $view->setVideo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUrlId(): ?string
+    {
+        return $this->url_id;
+    }
+
+    public function setUrlId(string $url_id): self
+    {
+        $this->url_id = $url_id;
 
         return $this;
     }
