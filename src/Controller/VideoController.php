@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Video;
 use App\Entity\View;
+use App\Form\CommentType;
 use App\Form\VideoType;
+use App\Repository\CommentRepository;
 use App\Repository\VideoRepository;
 use App\Repository\ViewRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,6 +44,7 @@ class VideoController extends AbstractController
         $form = $this->createForm(VideoType::class, $video);
         $form->handleRequest($request);
         $regexYtb = "/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/m";
+        
         if ($form->isSubmitted() && $form->isValid()) {
             if (preg_match_all($regexYtb, $video->getYtbUrl()) == 1) {
                 // dd($form->getData()->getYtbUrl());
@@ -69,15 +73,50 @@ class VideoController extends AbstractController
     /**
      * @Route("/video/view/{url_id}", name="view_video")
      */
-    public function viewVideo(Request $request, string $url_id ,VideoRepository $videoRepo, ViewRepository $viewRepo ,EntityManagerInterface $entityManager): Response
-    {
-        $video = $videoRepo->findOneBy(['url_id' => $url_id]);
-        if (!$video) return dd('This video does not exist');
-        $localIp = $request->getClientIp();
-        $vievOfVideoExist = $viewRepo->viewIfExist($video->getId(),$localIp);
+    public function viewVideo(Request $request, string $url_id , CommentRepository $commentRepo ,VideoRepository $videoRepo, ViewRepository $viewRepo ,EntityManagerInterface $entityManager): Response
+    {   
+        // define an empty user to not have error 
+        $user = null;
 
+        // If someone is connected, his token will be inserted in user variable
+        if ($this->get('security.token_storage')->getToken()) {
+            $user = $this->get('security.token_storage')->getToken()->getUser();
+        }
+        // find video in database by url
+        $video = $videoRepo->findOneBy(['url_id' => $url_id]);
+        // if given url does not exist in database, redirect to another page
+        if (!$video) return dd('This video does not exist');
+
+        // Prepare needed variables
+        //$comment = empty comment 
+        //$localIp = local ip
+        $comment = new Comment;
+        $localIp = $request->getClientIp();
+    
+        // Prepare form for comment
+        $form = $this->createForm(CommentType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // prepare received comment and insert it in database
+            $contentOfComment = $form->getData()->getContent();
+            $comment->setVideo($video);
+            $comment->setAuthor($user);
+            $comment->setContent($contentOfComment);
+            $entityManager->persist($comment);
+            $entityManager->flush();
+            // redirect to same page to delete data in input field 
+            return $this->redirect($request->getRequestUri());
+        }
+
+        // Prepare needed variables
+        // $commentOfVideo give collection of all comment linked to the video
+        $commentOfVideo = $commentRepo->getCommentOfVideo($video->getId());
         $view = new View;
-        if ($vievOfVideoExist == false) {
+
+        //$viewOfVideoExist = say if the views for the video exist in database | return false or true
+        //If $viewOfVideoExist returned false, insert view for the video in database
+        $viewOfVideoExist = $viewRepo->viewIfExist($video->getId(),$localIp);
+        if ($viewOfVideoExist == false) {
             $view->setVideo($video);
             $view->setIP($localIp);
             $entityManager->persist($view);
@@ -90,6 +129,9 @@ class VideoController extends AbstractController
             'video' => $video,
             'url' => $video->getUrlId(),
             'views' => count($video->getViews()),
+            'commentForm' => $form->createView(),
+            'userConnected' => $user,
+            'comments' => $commentOfVideo,
         ]);
     }
 

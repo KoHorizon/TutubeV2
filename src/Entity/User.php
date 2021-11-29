@@ -59,6 +59,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $videos;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="subscribers")
+     */
+    private $subs;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="subs")
+     */
+    private $subscribers;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="Author")
+     */
+    private $comments;
+
     public function __toString() {
         return $this->pseudo;
     }
@@ -66,6 +81,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->videos = new ArrayCollection();
+        $this->subs = new ArrayCollection();
+        $this->subscribers = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -217,6 +235,87 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($video->getTutuber() === $this) {
                 $video->setTutuber(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getSubs(): Collection
+    {
+        return $this->subs;
+    }
+
+    public function addSub(self $sub): self
+    {
+        if (!$this->subs->contains($sub)) {
+            $this->subs[] = $sub;
+        }
+
+        return $this;
+    }
+
+    public function removeSub(self $sub): self
+    {
+        $this->subs->removeElement($sub);
+
+        return $this;
+    }
+    
+    /**
+     * @return Collection|self[]
+     */
+    public function getSubscribers(): Collection
+    {
+        return $this->subscribers;
+    }
+
+    public function addSubscriber(self $subscriber): self
+    {
+        if (!$this->subscribers->contains($subscriber)) {
+            $this->subscribers[] = $subscriber;
+            $subscriber->addSub($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubscriber(self $subscriber): self
+    {
+        if ($this->subscribers->removeElement($subscriber)) {
+            $subscriber->removeSub($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getAuthor() === $this) {
+                $comment->setAuthor(null);
             }
         }
 
