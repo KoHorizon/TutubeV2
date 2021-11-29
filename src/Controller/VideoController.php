@@ -88,8 +88,8 @@ class VideoController extends AbstractController
         if (!$video) return dd('This video does not exist');
 
         // Prepare needed variables
-        //$comment = empty comment 
-        //$localIp = local ip
+        // $comment = empty comment 
+        // $localIp = local ip
         $comment = new Comment;
         $localIp = $request->getClientIp();
     
@@ -113,8 +113,8 @@ class VideoController extends AbstractController
         $commentOfVideo = $commentRepo->getCommentOfVideo($video->getId());
         $view = new View;
 
-        //$viewOfVideoExist = say if the views for the video exist in database | return false or true
-        //If $viewOfVideoExist returned false, insert view for the video in database
+        // $viewOfVideoExist = say if the views for the video exist in database | return false or true
+        // If $viewOfVideoExist returned false, insert view for the video in database
         $viewOfVideoExist = $viewRepo->viewIfExist($video->getId(),$localIp);
         if ($viewOfVideoExist == false) {
             $view->setVideo($video);
@@ -133,6 +133,45 @@ class VideoController extends AbstractController
             'userConnected' => $user,
             'comments' => $commentOfVideo,
         ]);
+    }
+
+
+
+    /**
+     * @Route("/tutuber/video/delete/{id_video}", name="delete_video")
+     */
+    public function deleteVideo(int $id_video, VideoRepository $videoRepo, EntityManagerInterface $manager): Response
+    {
+        // define an empty user to not have error 
+        $user = null;
+        // If someone is connected, his token will be inserted in user variable
+        if ($this->get('security.token_storage')->getToken()) {
+            $user = $this->get('security.token_storage')->getToken()->getUser();
+        }
+        // dd($user->getId());
+        // Prepare needed variable
+        // $idOfConnectedUser get the id of connected user
+        // $videoById get the id of a video
+        $idOfConnectedUser = $user->getId();
+        $videoById = $videoRepo->findOneBy(['id' => $id_video]);
+        // Give id of connected user and id of a video to a Repo to see 
+        // -> if the video given belongs to connected user. | Return false or true
+        $checkIfVideoExist = $videoRepo->checkIfVideoBelongToTutuber($idOfConnectedUser,$id_video);
+
+        // if $checkIfVideoExist is true, check if $videoById also exist then delete give video.
+        // and redirect to Tutuber page.
+        if ( $checkIfVideoExist ) {
+            if ( $videoById ) {
+                $manager->remove($videoById);
+                $manager->flush();
+                return $this->redirectToRoute('tutuber_page',array(
+                    'tutuber' => $user->getPseudo(),
+            ));
+            }
+        }
+        return $this->redirectToRoute('tutuber_page',array(
+            'tutuber' => $user->getPseudo(),
+        ));
     }
 
 }

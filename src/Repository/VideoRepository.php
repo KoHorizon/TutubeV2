@@ -28,6 +28,35 @@ class VideoRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    public function getTutuberVideos($tutuber) 
+    {
+        $qb = $this->createQueryBuilder('v')
+            ->where('v.tutuber = :tutuber')
+            ->setParameter('tutuber', $tutuber);
+            $query = $qb->getQuery();
+            return $query->execute();
+    }
+    
+    public function checkIfVideoBelongToTutuber($tutuber, $id_video_toDelete) 
+    {
+        // dd($id_video_toDelete);
+        $qb = $this->createQueryBuilder('v')
+            ->where('v.tutuber = :id_tutuber')
+            ->andWhere('v.id = :id_video')
+            ->setParameter('id_tutuber', $tutuber)
+            ->setParameter('id_video', $id_video_toDelete);
+            $query = $qb->getQuery();
+            // dd($query->execute());
+            $result = $query->execute();
+
+            if ($result) {
+                return true;
+            } else {
+                return false;
+            }
+            // return $query->execute();
+    }
+
     // /**
     //  * @return Video[] Returns an array of Video objects
     //  */

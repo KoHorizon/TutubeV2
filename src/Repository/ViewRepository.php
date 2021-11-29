@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\View;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Repository\UserRepository;
 
 /**
  * @method View|null find($id, $lockMode = null, $lockVersion = null)
@@ -39,7 +40,7 @@ class ViewRepository extends ServiceEntityRepository
             return false;
         }
     }
-
+    
     /*
     public function findByExampleField($value)
     {
