@@ -121,7 +121,6 @@ class VideoController extends AbstractController
             $view->setIP($localIp);
             $entityManager->persist($view);
             $entityManager->flush();
-
         }
 
 
@@ -154,6 +153,8 @@ class VideoController extends AbstractController
         // $videoById get the id of a video
         $idOfConnectedUser = $user->getId();
         $videoById = $videoRepo->findOneBy(['id' => $id_video]);
+
+        
         // Give id of connected user and id of a video to a Repo to see 
         // -> if the video given belongs to connected user. | Return false or true
         $checkIfVideoExist = $videoRepo->checkIfVideoBelongToTutuber($idOfConnectedUser,$id_video);
@@ -166,7 +167,7 @@ class VideoController extends AbstractController
                 $manager->flush();
                 return $this->redirectToRoute('tutuber_page',array(
                     'tutuber' => $user->getPseudo(),
-            ));
+                ));
             }
         }
         return $this->redirectToRoute('tutuber_page',array(

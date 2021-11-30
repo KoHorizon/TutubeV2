@@ -39,7 +39,6 @@ class VideoRepository extends ServiceEntityRepository
     
     public function checkIfVideoBelongToTutuber($tutuber, $id_video_toDelete) 
     {
-        // dd($id_video_toDelete);
         $qb = $this->createQueryBuilder('v')
             ->where('v.tutuber = :id_tutuber')
             ->andWhere('v.id = :id_video')

@@ -13,9 +13,20 @@
         display: grid;
         grid-template-columns: repeat(auto-fill,570px);   
     }
-
+    .btn {
+        padding: 10px;
+        background-color: red;
+        color: white;
+    }
     </style>
     <div class="stat">
+        {% if user != tutuber and isSubbed == false %}
+            <a class="btn" href="{{ path('subscribeFunction', {tutuber_id : tutuber.id } ) }}">Subscribe</a>
+        {% elseif isSubbed == true  %}
+        <a class="btn" href="{{ path('unsubscribeFunction', {tutuber_id : tutuber.id } ) }}">Unsub</a>
+        {% endif %}
+
+
         <p>Nombre de video on ligne : {{ countVideo }}</p>
         <p>Nombre de vue sur cette chaine : {{ viewOfChannel }}</p>
     </div>
@@ -38,6 +49,9 @@
                 <p>{{video.date|date('d-m-Y')}}</p>
                 <p>{{video.tutuber }}</p>
                 <p>{{video.views|length}} views</p>
+                {% if user == video.tutuber %}
+				    <a class="btn" href="{{ path('delete_video', {id_video : video.id } ) }}">Supprimez</a>
+                {% endif %}
             </div>
         {% endfor %} 
     </div>

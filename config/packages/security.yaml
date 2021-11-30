@@ -37,3 +37,5 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: /video/upload, roles: ROLE_USER }
+        - { path: /sub, roles: ROLE_USER }
+
