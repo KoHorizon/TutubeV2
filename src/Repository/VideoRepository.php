@@ -56,6 +56,18 @@ class VideoRepository extends ServiceEntityRepository
             // return $query->execute();
     }
 
+    public function getLast20VideoOfSubbedTutuber($arrayOfSubbedTutubers) 
+    {
+
+        $qb = $this->createQueryBuilder('v')
+            ->where('v.tutuber IN (:id_subbedTutuber)')
+            ->setParameter('id_subbedTutuber', $arrayOfSubbedTutubers)
+            ->orderBy('v.id','DESC')
+            ->setMaxResults(20);
+
+            $query = $qb->getQuery();
+            return $result = $query->execute();
+    }
     // /**
     //  * @return Video[] Returns an array of Video objects
     //  */

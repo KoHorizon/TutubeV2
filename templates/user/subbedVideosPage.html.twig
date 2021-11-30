@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MainController!{% endblock %}
+
+{% block body %}
+<style>
+    html {
+        height: 100%;
+    }
+    body { 
+        margin-right: 3%;
+        display: flex;
+        height: 100%;
+
+    }
+    .sideBar {
+        font-family: sans-serif;
+        font-size: 20px;
+        color: white;
+        height: 100%;
+        margin-right: 3%;
+        width: 20%;
+        background-color: #966919;
+    }
+    .videos {
+        margin-top: 30px;
+        height: 100%;
+        /* padding-left: 3%;
+        padding-right: 3%; */
+        /* display: flex; */
+        justify-content: space-between;
+        flex-wrap: wrap;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fill,370px);   
+    }
+    .video {
+        width: 210px;
+    }
+    .subTutuber {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .subTutuber p {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 50px;
+    }
+    .subTutuber p> a{
+        margin-left: -100px;
+
+        font-size: 20px;
+        color: white;
+        text-decoration: none;
+    }
+    .subTutuber p:hover {
+        background-color: burlywood;
+    }
+</style>
+<div class="sideBar">
+    <span>Abonnement</span>
+    <div class="subTutuber">
+        {% for tutuber in subbedTututber %}
+        <p>
+            <a class="href" href="{{ path('tutuber_page',{tutuber : tutuber.pseudo }) }}"> - {{ tutuber.pseudo }}</a>
+        </p>
+            
+        {% endfor %}
+    </div>
+
+</div>
+<div class="videos">
+    {% for video in last20VideosOfSubbedTutubers %}
+    
+    <div class="video" id="redirectIframe">
+            <a class="href" href="{{ path('view_video',{url_id : video.url_id }) }}">
+                <iframe 
+                    width="360"
+                    height="195"
+                    src="https://www.youtube.com/embed/{{ video.url_id }}"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                ></iframe> 
+                <p>{{video.name}}</p>
+            </a>
+            <p>{{video.date|date('d-m-Y')}}</p>
+            <p>{{video.tutuber }}</p>
+            <p>{{video.views|length}} views</p>
+        </div>
+    {% endfor %} 
+</div>
+
+<script>
+
+</script>
+
+{% endblock %}

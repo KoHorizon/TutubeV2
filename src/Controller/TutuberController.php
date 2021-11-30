@@ -28,12 +28,16 @@ class TutuberController extends AbstractController
         if (!$dataOfTutuber) return dd('This page does not exist');
 
         $videosOfTutuber = $videoRepository->getTutuberVideos($dataOfTutuber);
-        $test = $user->getSubs();
-        $tab = [];
-        foreach ($test as $value) {
-            array_push($tab,$value->getId());
+        $isSubbed = false;
+        if ($user) {
+            $getSubArray = $user->getSubs();
+            $ArrayThatContainSubs = [];
+            
+            foreach ($getSubArray as $value) {
+                array_push($ArrayThatContainSubs,$value->getId());
+            }
+            $isSubbed = in_array($dataOfTutuber->getId(),$ArrayThatContainSubs);
         }
-        $isSubbed = in_array($dataOfTutuber->getId(),$tab);
 
         // Count view of channel by foreaching on videos:views of Tutuber
         $viewOfChannel = 0;

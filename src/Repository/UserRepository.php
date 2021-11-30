@@ -58,6 +58,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             }
     }
 
+    public function getSubbedUser($idOfSubbed)
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.id IN (:arrayIdOfSubbed)')
+            ->setParameter('arrayIdOfSubbed', $idOfSubbed);
+            $query = $qb->getQuery();
+            // dd($query->execute());
+            return $result = $query->execute();
+    }
+
     /*
     public function findOneBySomeField($value): ?User
     {
