@@ -7,7 +7,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class RandomIpSubscriber implements EventSubscriberInterface
 {
-    const RANDOM_IP = false;
+    const RANDOM_IP = true;
     const IP_TO_USE = '123.456.789';
 
     public function onKernelController(ControllerEvent $event)

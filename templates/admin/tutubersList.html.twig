@@ -21,7 +21,7 @@
         }
 
         .fullTable {
-            width: 77%;
+          width: 100%;
         }
     </style>
 {% endblock %}
@@ -48,7 +48,6 @@
             <td><a href="{{ path('admin_show_edit_tutuber', {id : user.id ,tutuber : user.pseudo } ) }}">Editer</td>
           </tr>
         {% endfor %}
-   
         </tbody>
       </table>
 </div>

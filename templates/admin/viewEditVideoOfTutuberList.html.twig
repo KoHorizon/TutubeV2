@@ -4,7 +4,7 @@
 {% block style %}
     <style>
         .fullTable {
-            width: 77%;
+          width: 100%;
         }
         .name {
             width: 600px;
@@ -35,5 +35,12 @@
         {% endfor %}
         </tbody>
       </table>
+</div>
+<div>
+  {% if isMyPage == false %}
+    <a class="btn btn-danger" href="{{ path('admin_delete_user' , { userId : userData.id}) }}}"> Supprimez ce Tutuber !</a>
+  {% else %}
+    <p class="btn btn-secondary">Tu ne peux pas Supprimez ton compte !</p>
+  {% endif %}
 </div>
 {% endblock %}

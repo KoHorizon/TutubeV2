@@ -1,0 +1,55 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}TutubeV2 Admin{% endblock %}
+{% block style %}
+    <style>
+    .comments {
+        width: 1280px;
+    }
+    .comment {
+        position: relative;
+        padding: 20px;
+        width: 100%;
+        border: 2px solid black;
+    }
+    .comment > a {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        text-decoration: none;
+
+    }
+    .videoFull {
+        width: 100%;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+    }
+    .videoFull > iframe{
+        width: 1280px;
+        height: 720px;
+    }
+    </style>
+{% endblock %}
+{% block body %}
+<div class="videoFull">
+    <iframe
+      width="1280"
+      height="720"
+      src="https://www.youtube.com/embed/{{ videoUrl }}"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+    <div class="comments">
+        {% for comment in comments %}
+        <div class="comment"> 
+          <p>{{ comment.Author }}</p>
+          <p>{{ comment.Content }}</p>
+          <a class="btn btn-danger" href="{{path('admin_delete_comment', { id : comment.id })}}">fsdfdsf</a>
+        </div>
+      {% endfor %}
+    </div>
+</div>
+{% endblock %}

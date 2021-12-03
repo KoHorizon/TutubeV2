@@ -3,33 +3,33 @@
 {% block title %}TutubeV2 Admin{% endblock %}
 {% block style %}
     <style>
-        .videoList {
-            display: flex;
-            flex-direction: column;
+        .fullTable {
+            width: 100%;
         }
-        .videoList {
-            margin-top: 10px;
-            color: black;
-            font-size: 23px;
-            padding: 15px 51px ;
-            border: 1px black solid;
-            border-radius: 15px;
-        }
-        .videos > a {
-            color: black;
-            text-decoration: none;
+        .name {
+            width: 600px;
         }
     </style>
 {% endblock %}
 {% block body %}
-    <div class="videos">
-        {% for video in videos %}
-            <a href="">
-                <div class="videoList">
-                    <span class="videoName">{{ video.name }}</span>
-                    <span class="date">{{ video.date|date('d-m-Y') }}</span>
-                </div>
-            </a>
-        {% endfor %}
+    <div class="fullTable">
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">name</th>
+                <th scope="col">date</th>
+                <th scope="col">modifier</th>   
+              </tr>
+            </thead>
+            <tbody>
+            {% for video in videos %}
+              <tr>
+                <th class="name">{{ video.name }}</th>
+                <td>{{ video.date|date('d-m-Y')}}</td>
+                <td><a href="{{ path('admin_moderate_video', {tutuber : video.tutuber, idVideo : video.id }) }}">modifier</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
     </div>
 {% endblock %}

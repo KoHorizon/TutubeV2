@@ -67,6 +67,13 @@
         .isSelected {
             background-color: #FCBF49;
         }
+        .body {
+            width: 77%;
+            overflow:scroll;
+        }
+        .body::-webkit-scrollbar{
+            display: none;
+        }
     </style>
       {% block style %}
 
@@ -88,8 +95,11 @@
             </div>
         
         </div>
-        {% block body %}
+        <div class="body">
+            {% block body %}
+    
+            {% endblock %}
 
-        {% endblock %}
+        </div>
 	</body>
 </html>
