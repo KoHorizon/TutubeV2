@@ -48,9 +48,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('id_tutuber', 1)
             ->setParameter('id_video', 2);
             $query = $qb->getQuery();
-            // dd($query->execute());
             $result = $query->execute();
-            dd($result);
+
             if ($result) {
                 return true;
             } else {
@@ -68,6 +67,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             return $result = $query->execute();
     }
 
+    public function getAllTutubersDesc()
+    {
+        $qb = $this->createQueryBuilder('u')
+        ->orderBy('u.id','ASC');   
+        $query = $qb->getQuery();
+        return $result = $query->execute();
+    }
     /*
     public function findOneBySomeField($value): ?User
     {

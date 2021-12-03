@@ -42,7 +42,17 @@
         display: flex;
         flex-direction: column;
     }
-    .subTutuber p {
+
+    .subTutuber > a {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        height: 50px;
+        width: 100%;
+        text-decoration: none;
+        color: white;
+    }
+    /* .subTutuber p {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -51,23 +61,19 @@
     }
     .subTutuber p> a{
         margin-left: -100px;
-
         font-size: 20px;
         color: white;
         text-decoration: none;
-    }
-    .subTutuber p:hover {
+    } */
+    .subTutuber a:hover {
         background-color: burlywood;
     }
 </style>
 <div class="sideBar">
-    <span>Abonnement</span>
+    <span>Abonnement :</span>
     <div class="subTutuber">
         {% for tutuber in subbedTututber %}
-        <p>
             <a class="href" href="{{ path('tutuber_page',{tutuber : tutuber.pseudo }) }}"> - {{ tutuber.pseudo }}</a>
-        </p>
-            
         {% endfor %}
     </div>
 

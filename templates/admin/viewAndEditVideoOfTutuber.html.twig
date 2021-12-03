@@ -1,0 +1,39 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}TutubeV2 Admin{% endblock %}
+{% block style %}
+    <style>
+        .fullTable {
+            width: 77%;
+        }
+        .name {
+            width: 600px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+<div class="fullTable">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">name</th>
+            <th scope="col">date</th>
+            <th scope="col">views</th>
+            <th scope="col">url</th>
+            <th scope="col">Supprimez</th>   
+          </tr>
+        </thead>
+        <tbody>
+        {% for video in videoOfTutuber %}
+          <tr>
+            <th class="name">{{ video.name }}</th>
+            <td>{{ video.date|date('d-m-Y')}}</td>
+            <td>{{ video.views|length }}</td>
+            <td>/video/view/{{ video.url_id }}</td>
+            <td><a href="{{ path('delete_video_admin', {id : video.id }) }}">Supprimez</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+</div>
+{% endblock %}

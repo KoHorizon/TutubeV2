@@ -27,7 +27,7 @@ class TutuberController extends AbstractController
         $dataOfTutuber = $userRepo->findOneBy(['pseudo'=> $tutuber]);
         if (!$dataOfTutuber) return dd('This page does not exist');
 
-        $videosOfTutuber = $videoRepository->getTutuberVideos($dataOfTutuber);
+        $videosOfTutuber = $videoRepository->getTutuberVideos($dataOfTutuber, 'ASC');
         $isSubbed = false;
         if ($user) {
             $getSubArray = $user->getSubs();

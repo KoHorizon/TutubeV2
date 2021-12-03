@@ -1,0 +1,55 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}TutubeV2 Admin{% endblock %}
+{% block style %}
+    <style>
+        .userList {
+            display: flex;
+            flex-direction: column;
+        }
+        .userList {
+            margin-top: 10px;
+            color: black;
+            font-size: 23px;
+            padding: 15px 51px ;
+            border: 1px black solid;
+            border-radius: 15px;
+        }
+        .tutubers > a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .fullTable {
+            width: 77%;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+
+<div class="fullTable">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">pseudo</th>
+            <th scope="col">Last</th>
+            <th scope="col">Prénom</th>
+            <th scope="col">Editer</th>   
+          </tr>
+        </thead>
+        <tbody>
+        {% for user in tutubers %}
+          <tr>
+            <th scope="row">{{ user.id }}</th>
+            <td>{{ user.pseudo }}</td>
+            <td>{{ user.firstname }}</td>
+            <td>{{ user.lastname }}</td>
+            <td><a href="{{ path('admin_show_edit_tutuber', {id : user.id ,tutuber : user.pseudo } ) }}">Editer</td>
+          </tr>
+        {% endfor %}
+   
+        </tbody>
+      </table>
+</div>
+{% endblock %}

@@ -28,11 +28,21 @@ class VideoRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function getTutuberVideos($tutuber) 
+    public function getTutuberVideos($tutuber, $order) 
     {
         $qb = $this->createQueryBuilder('v')
             ->where('v.tutuber = :tutuber')
+            ->orderBy('v.id', $order)
             ->setParameter('tutuber', $tutuber);
+            $query = $qb->getQuery();
+            return $query->execute();
+    }
+    public function getTutuberVideosById($id, $order) 
+    {
+        $qb = $this->createQueryBuilder('v')
+            ->where('v.id = :id')
+            ->orderBy('v.id', $order)
+            ->setParameter('tutuber', $id);
             $query = $qb->getQuery();
             return $query->execute();
     }
@@ -68,6 +78,24 @@ class VideoRepository extends ServiceEntityRepository
             $query = $qb->getQuery();
             return $result = $query->execute();
     }
+
+    public function getAllVideoDesc()
+    {
+        $qb = $this->createQueryBuilder('v')
+        ->orderBy('v.id','DESC');   
+        $query = $qb->getQuery();
+        return $result = $query->execute();
+    }
+
+
+    // public function deleteVideo($id){
+    //     $qb = $this->createQueryBuilder('v')
+    //         ->where('v.id = :id')
+    //         ->setParameter('id', $id)
+    //         ->delete()
+    //         ->getQuery()
+    //         ->execute();
+    // }
     // /**
     //  * @return Video[] Returns an array of Video objects
     //  */
