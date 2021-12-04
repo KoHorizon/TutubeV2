@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %} {% block title %}Hello VideoController!{%
+    endblock %} {% block body %}
+    <style>
+      .comment {
+        padding: 20px;
+        width: 35%;
+        border: 2px solid black;
+      }
+      .videoFull {
+        display: flex;
+        justify-content: center;
+        background-color: black;
+      }
+      .videoFull > iframe{
+        width: 80%;
+        height: 700px;
+      }
+    </style>
+    
+    <div class="">
+      <div class="videoFull">
+        <iframe
+          width="1669"
+          height="700"
+          src="https://www.youtube.com/embed/{{ randomVideo.url_id }}"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+      <p> titre : {{ randomVideo.name }}</p>
+      <p> vue : {{ views }} </p>
+    </div>
+    {% endblock %}
+    

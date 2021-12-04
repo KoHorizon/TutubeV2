@@ -8,6 +8,7 @@ use App\Entity\View;
 use App\Form\CommentType;
 use App\Form\VideoType;
 use App\Repository\CommentRepository;
+use App\Repository\UserRepository;
 use App\Repository\VideoRepository;
 use App\Repository\ViewRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,16 +23,55 @@ class VideoController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function home(VideoRepository $videoRepo) 
-    {
+    public function home(VideoRepository $videoRepo, Request $request) 
+    {   
+        $video = New Video;
+        $form = $this->createFormBuilder($video)
+            ->add('name')
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid() ) {
+            return $this->redirectToRoute('searchVideo',array(
+                'name' => $form->getData()->getName(),
+            ));
+        }
         $last20videos = $videoRepo->last20Videos();
-        // dd($last20videos);
-        // dd($last20videos);
+
 
         return $this->render('main/index.html.twig',[
             'videos' => $last20videos,
+            'formSearch'=> $form->createView(),
         ]);
     }
+
+    /**
+     * @Route("/search/{name}", name="searchVideo")
+     */
+    public function searchVideo($name, VideoRepository $videoRepo, Request $request) 
+    {   
+        $video = New Video;
+        $form = $this->createFormBuilder($video)
+            ->add('name')
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid() ) {
+            return $this->redirectToRoute('searchVideo',array(
+                'name' => $form->getData()->getName(),
+            ));
+        }
+        $searchedVideos = $videoRepo->getVideoLike($name);
+        return $this->render('main/search.html.twig',[
+            'formSearch'=> $form->createView(),
+            'videos' => $searchedVideos,
+
+        ]);
+    }
+
+    
+
+
+
+
     /**
      * @Route("/video/upload", name="upload_video")
      */
@@ -174,5 +214,42 @@ class VideoController extends AbstractController
             'tutuber' => $user->getPseudo(),
         ));
     }
+    
+    /**
+     * @Route("/discorvery", name="discorvery_page")
+     */
+    public function discoveryVideos(VideoRepository $videoRepo, UserRepository $userRepo)
+    {
+        $tutubers = $userRepo->findAll();
+        $userWithLessThan100Views = $userRepo->getUserWithLessXView($tutubers, $videoRepo, 100);
 
+        shuffle($userWithLessThan100Views);
+        $idOfTutuber = $userWithLessThan100Views[0]->getId();
+
+        // dd($rand);
+        $videoOfSelectedTutuber = $videoRepo->findBy(['tutuber' => $idOfTutuber ]);
+        shuffle($videoOfSelectedTutuber);
+        // dd($videoOfSelectedTutuber[0]);
+        $viewsOfVideo = $videoOfSelectedTutuber[0]->getViews();
+
+
+        return $this->render('video/discoveryVideo.html.twig', [
+            'randomVideo' => $videoOfSelectedTutuber[0],
+            'views' => count($viewsOfVideo),
+        ]);
+    }
+
+
+    /**
+     * @Route("/trending", name="trending_page")
+     */
+    public function trendingVideos(VideoRepository $videoRepo, UserRepository $userRepo)
+    {   
+        $videosOfTheWeek = $videoRepo->getVideoOfTheWeek();
+        $popularVideo = $videoRepo->getPopularGivenVideo($videosOfTheWeek);
+
+        return $this->render('video/trendingVideos.html.twig', [
+            'trendingVideo' => $popularVideo,
+        ]);
+    }
 }

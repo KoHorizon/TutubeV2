@@ -72,7 +72,11 @@
             overflow:scroll;
         }
         .body::-webkit-scrollbar{
-            display: none;
+            display: none; /* Chrome*/
+        }
+        .body {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
     </style>
       {% block style %}

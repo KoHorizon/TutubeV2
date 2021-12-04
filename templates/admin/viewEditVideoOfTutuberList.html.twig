@@ -9,6 +9,18 @@
         .name {
             width: 600px;
         }
+        .formAndData {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          
+        }
+        .userData {
+          font-size: 38px;
+          padding: 50px;
+          border: black 2px solid;
+          border-radius: 15px;
+        }
     </style>
 {% endblock %}
 {% block body %}
@@ -30,7 +42,7 @@
             <td>{{ video.date|date('d-m-Y')}}</td>
             <td>{{ video.views|length }}</td>
             <td>/video/view/{{ video.url_id }}</td>
-            <td><a href="{{ path('delete_video_admin', {id : video.id }) }}">Supprimez</td>
+            <td><a class="btn btn-primary" href="{{ path('delete_video_admin', {id : video.id }) }}">Supprimez</td>
           </tr>
         {% endfor %}
         </tbody>
@@ -42,5 +54,45 @@
   {% else %}
     <p class="btn btn-secondary">Tu ne peux pas Supprimez ton compte !</p>
   {% endif %}
+</div>
+<div>  
+  <p>Editer l'utilisateur :</p>
+</div>
+<div class="formAndData">
+  <div class="form">
+    {{ form_start(formUser) }}
+        {{ form_row(formUser.lastname, {
+          'label': 'lastname',
+          'attr': {'class': ''}
+        }) }}
+        {{ form_row(formUser.firstname, {
+          'label': 'firstname',
+          'attr': {'class': ''}
+        }) }}
+        {{ form_row(formUser.pseudo, {
+          'label': 'pseudo',
+          'attr': {'class': ''}
+        }) }}
+        <div class="">
+          <button type="submit" class="">Submit</button>
+        </div>
+    {{ form_end(formUser) }}
+  </div>
+  <div class="userData">
+    <span>Information de l'utilisateur :</span>
+    <p>nom : {{ userData.lastname }}</p>
+    <p>prénom : {{ userData.firstname }}</p>
+    <p>pseudo : {{ userData.pseudo }}</p>
+    <p>mail : {{ userData.email }}</p>
+    <p>Role :
+      {% for roles in userData.roles %}
+        {% if roles == 'ROLE_ADMIN' %}
+          <span class="btn btn-warning">Admin</span>
+        {% elseif roles == 'ROLE_USER' %}
+          <span class="btn btn-primary">User</span> 
+        {% endif %}
+      {% endfor %}
+    </p>  
+    </div>  
 </div>
 {% endblock %}

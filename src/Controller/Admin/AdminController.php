@@ -93,12 +93,32 @@ class AdminController extends AbstractController
      * @Route("/admin/tutubers/{id}/{tutuber}" , name="admin_show_edit_tutuber")
      */
 
-    public function adminShowAndEditTutubers(UrlServices $urlService, $tutuber, $id, UserRepository $userRepo, VideoRepository $videoRepo, Request $request)
-    {
+    public function adminShowAndEditTutubers(UrlServices $urlService, $tutuber, $id, UserRepository $userRepo, VideoRepository $videoRepo, Request $request, EntityManagerInterface $manager): Response
+    {   
+
         $userData = $userRepo->findOneBy(['id' => $id]);
         if (!$userData) {
             dd('This user does not exit does not exist, need error page not found page');
         }
+
+        $form = $this->createFormBuilder($userData)
+                ->add('lastname')
+                ->add('firstname')
+                ->add('pseudo')
+                ->getForm();
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $manager->persist($userData);
+                $manager->flush();
+            } catch(\Exception $e) {
+                dd('error lors de la sauvegarde de modif');
+            }
+        }
+
+
         // Get Original URL
         $link = $urlService->getMainlUrl();
         // ----------------------------------------
@@ -122,6 +142,7 @@ class AdminController extends AbstractController
             'url' => $url,
             'userData' => $userData,
             'isMyPage' => $isMyPage,
+            'formUser' => $form->createView()
         ]);
     }
 

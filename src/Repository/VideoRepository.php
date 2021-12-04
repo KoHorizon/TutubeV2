@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Video;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -13,7 +15,10 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Video[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class VideoRepository extends ServiceEntityRepository
-{
+{   
+    // /**
+    //  * @return Video[] Returns an array of Video objects
+    //  */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Video::class);
@@ -88,17 +93,40 @@ class VideoRepository extends ServiceEntityRepository
     }
 
 
-    // public function deleteVideo($id){
-    //     $qb = $this->createQueryBuilder('v')
-    //         ->where('v.id = :id')
-    //         ->setParameter('id', $id)
-    //         ->delete()
-    //         ->getQuery()
-    //         ->execute();
-    // }
-    // /**
-    //  * @return Video[] Returns an array of Video objects
-    //  */
+    public function getVideoOfTheWeek()
+    {
+        $qb = $this->createQueryBuilder('v')
+        ->where('v.date > :lastWeek')
+        ->setParameter('lastWeek', date("Y-m-d", strtotime("-7 days")));
+        $query = $qb->getQuery();
+        return $result = $query->execute();
+    }
+
+
+    public function getPopularGivenVideo($lastWeekVideos)
+    {
+        for($j = 0; $j < count($lastWeekVideos); $j ++) {
+            for($i = 0; $i < count($lastWeekVideos)-1; $i ++){
+        
+                if(count($lastWeekVideos[$i]->getViews()) < count($lastWeekVideos[$i+1]->getViews())) {
+                    $temp = $lastWeekVideos[$i+1];
+                    $lastWeekVideos[$i+1]=$lastWeekVideos[$i];
+                    $lastWeekVideos[$i]=$temp;
+                }       
+            }
+        }
+        return $lastWeekVideos;
+    }
+
+    public function getVideoLike($name)
+    {
+        $qb = $this->createQueryBuilder('v')
+            ->where('v.name LIKE :name')
+            ->setParameter('name', '%'.$name.'%');
+            $query = $qb->getQuery();
+            return $result = $query->execute();
+
+    }
     /*
     public function findByExampleField($value)
     {

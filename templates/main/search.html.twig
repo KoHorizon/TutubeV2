@@ -16,21 +16,45 @@
         display: grid;
         grid-template-columns: repeat(auto-fill,570px);   
     }
-    .video {
-
+    .search {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: 50px;
+        /* background-color: black; */
+    }
+    label[for=form_name]
+    {
+        display: none;
+    }
+    .search > div {
+        width:100%;
+    }
+    .searchInput{
+        width: 100%;
+    }
+    .searchBtn {
+        margin-left: 10px;
+        border: none;
+        background-color: rgb(0, 98, 255);
+        color: white;
+        border-radius: 10px;
+        padding: 10px;
     }
 </style>
-    <div class="search">
-        {{ form_start(formSearch) }}
+<div class="search">
+    <div>
+    {{ form_start(formSearch) }}
         {{ form_row(formSearch.name, {
           'label': 'search',
-          'attr': {'class': ''}
+          'attr': {'class': 'searchInput'}
         }) }}
-        <div class="">
-          <button type="submit" class="">Submit</button>
-        </div>
-    {{ form_end(formSearch) }}
     </div>
+    <div class="">
+        <button type="submit" class="btn btn-outline-secondary ">Submit</button>
+    </div>
+    {{ form_end(formSearch) }}
+</div>
 <div class="videos">
     {% for video in videos %}
     <div class="video" id="redirectIframe">

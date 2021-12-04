@@ -22,6 +22,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
+    // /**
+    //  * @return User[] Returns an array of User objects
+    //  */
+    
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */
@@ -36,9 +40,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
+    
     
     public function checkIfSubbed()
     {
@@ -73,6 +75,33 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ->orderBy('u.id','ASC');   
         $query = $qb->getQuery();
         return $result = $query->execute();
+    }
+
+
+    public function getUserWithLessXView($tutubers, $videoRepo, $viewParameter) 
+    {
+        $TutuberWithLessThanXViews = [];
+        foreach($tutubers as $tutuber) {
+            $videosOfTutuber = $videoRepo->getTutuberVideos($tutuber, 'ASC');
+            // Count view of channel by foreaching on videos:views of Tutuber
+            $viewOfChannel = 0;
+            foreach ($videosOfTutuber as $videos) {
+                $viewOfChannel += count($videos->getViews());
+            }
+            // $countVideos = count($videosOfTutuber);
+            // dd($viewOfChannel);
+            if ($viewOfChannel < $viewParameter) {
+                array_push($TutuberWithLessThanXViews, $tutuber->getId());
+            }
+        }
+
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.id IN (:tutuberWithLessThanXViewList)')
+            ->setParameter('tutuberWithLessThanXViewList', $TutuberWithLessThanXViews);
+            $query = $qb->getQuery();
+            // dd($query->execute());
+            return $result = $query->execute();
+        // return $TutuberWithLessThanXViews;     
     }
     /*
     public function findOneBySomeField($value): ?User

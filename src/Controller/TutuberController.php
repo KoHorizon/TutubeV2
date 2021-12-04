@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Repository\VideoRepository;
+use App\Services\UrlServices;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,9 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class TutuberController extends AbstractController
 {
     /**
-     * @Route("/tutuber/{tutuber}", name="tutuber_page")
+     * @Route("/tutuber/{tutuberId}/{tutuber}", name="tutuber_page")
      */
-    public function tutuberPage($tutuber, VideoRepository $videoRepository, UserRepository $userRepo): Response
+    public function tutuberPage(UrlServices $urlService ,$tutuber, $tutuberId, VideoRepository $videoRepository, UserRepository $userRepo): Response
     {
         // define an empty user to not have error 
         $user = null;
@@ -24,8 +25,15 @@ class TutuberController extends AbstractController
             $user = $this->get('security.token_storage')->getToken()->getUser();
         }
 
-        $dataOfTutuber = $userRepo->findOneBy(['pseudo'=> $tutuber]);
+        $dataOfTutuber = $userRepo->findOneBy(['id'=> $tutuberId]);
         if (!$dataOfTutuber) return dd('This page does not exist');
+        // ----------------------------------------
+        $mainUrl= $urlService->getMainlUrl();
+        if ($tutuber != $dataOfTutuber->getPseudo()) {
+            $correctedUrl = $mainUrl."/tutuber/".$tutuberId.'/'.$dataOfTutuber->getPseudo();
+            $urlService->rewriteUrl($correctedUrl);
+        }
+        // ----------------------------------------
 
         $videosOfTutuber = $videoRepository->getTutuberVideos($dataOfTutuber, 'ASC');
         $isSubbed = false;
@@ -80,6 +88,8 @@ class TutuberController extends AbstractController
         }
         return $this->redirectToRoute('tutuber_page',array(
             'tutuber' => $tutuberTosubTo->getPseudo(),
+            'tutuberId' => $tutuberTosubTo->getId(),
+
         ));
     }
 
@@ -104,6 +114,7 @@ class TutuberController extends AbstractController
         }
         return $this->redirectToRoute('tutuber_page',array(
             'tutuber' => $tutuberToUnsubTo->getPseudo(),
+            'tutuberId' => $tutuberToUnsubTo->getId(),
         ));
     }
 

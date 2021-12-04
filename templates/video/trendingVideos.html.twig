@@ -19,20 +19,16 @@
     .video {
 
     }
+    .title > p {
+        font-size: 50px;
+        font-weight: 600;
+    }
 </style>
-    <div class="search">
-        {{ form_start(formSearch) }}
-        {{ form_row(formSearch.name, {
-          'label': 'search',
-          'attr': {'class': ''}
-        }) }}
-        <div class="">
-          <button type="submit" class="">Submit</button>
-        </div>
-    {{ form_end(formSearch) }}
-    </div>
+<div class="title">
+    <p>In trending</p>
+</div>
 <div class="videos">
-    {% for video in videos %}
+    {% for video in trendingVideo %}
     <div class="video" id="redirectIframe">
             <a class="href" href="{{ path('view_video',{url_id : video.url_id }) }}">
                 <iframe 

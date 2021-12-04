@@ -45,7 +45,7 @@
             <td>{{ user.pseudo }}</td>
             <td>{{ user.firstname }}</td>
             <td>{{ user.lastname }}</td>
-            <td><a href="{{ path('admin_show_edit_tutuber', {id : user.id ,tutuber : user.pseudo } ) }}">Editer</td>
+            <td><a class="btn btn-warning" href="{{ path('admin_show_edit_tutuber', {id : user.id ,tutuber : user.pseudo } ) }}">Editer</td>
           </tr>
         {% endfor %}
         </tbody>
