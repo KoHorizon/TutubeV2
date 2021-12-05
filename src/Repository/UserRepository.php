@@ -81,6 +81,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function getUserWithLessXView($tutubers, $videoRepo, $viewParameter) 
     {
         $TutuberWithLessThanXViews = [];
+
         foreach($tutubers as $tutuber) {
             if ($videoRepo->getTutuberVideos($tutuber, 'ASC')) {
                 

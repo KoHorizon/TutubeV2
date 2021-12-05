@@ -223,6 +223,12 @@ class VideoController extends AbstractController
     public function discoveryVideos(VideoRepository $videoRepo, UserRepository $userRepo)
     {
         $tutubers = $userRepo->findAll();
+        $video = $videoRepo->findAll();
+        if (!$video) {
+            return $this->render('error.html.twig');
+        }
+
+
         $userWithLessThan100Views = $userRepo->getUserWithLessXView($tutubers, $videoRepo, 100);
 
         shuffle($userWithLessThan100Views);
