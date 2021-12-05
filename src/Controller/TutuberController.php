@@ -54,9 +54,6 @@ class TutuberController extends AbstractController
         }
         $countVideos = count($videosOfTutuber);
 
-
-        // $user->
-        // dd($dataOfTutuber);
         return $this->render('tutuber/index.html.twig', [
             'videoOfTutuber' => $videosOfTutuber,
             'tutuber'=> $dataOfTutuber,
@@ -120,4 +117,3 @@ class TutuberController extends AbstractController
 
     
 }
-// getViews

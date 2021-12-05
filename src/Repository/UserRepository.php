@@ -82,17 +82,20 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $TutuberWithLessThanXViews = [];
         foreach($tutubers as $tutuber) {
-            $videosOfTutuber = $videoRepo->getTutuberVideos($tutuber, 'ASC');
+            if ($videoRepo->getTutuberVideos($tutuber, 'ASC')) {
+                
+                $videosOfTutuber = $videoRepo->getTutuberVideos($tutuber, 'ASC');
+                $viewOfChannel = 0;
+                foreach ($videosOfTutuber as $videos) {
+                    $viewOfChannel += count($videos->getViews());
+                }
+                // $countVideos = count($videosOfTutuber);
+                // dd($viewOfChannel);
+                if ($viewOfChannel < $viewParameter) {
+                    array_push($TutuberWithLessThanXViews, $tutuber->getId());
+                }
+            }
             // Count view of channel by foreaching on videos:views of Tutuber
-            $viewOfChannel = 0;
-            foreach ($videosOfTutuber as $videos) {
-                $viewOfChannel += count($videos->getViews());
-            }
-            // $countVideos = count($videosOfTutuber);
-            // dd($viewOfChannel);
-            if ($viewOfChannel < $viewParameter) {
-                array_push($TutuberWithLessThanXViews, $tutuber->getId());
-            }
         }
 
         $qb = $this->createQueryBuilder('u')

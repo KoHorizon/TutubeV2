@@ -37,7 +37,6 @@ class VideoController extends AbstractController
         }
         $last20videos = $videoRepo->last20Videos();
 
-
         return $this->render('main/index.html.twig',[
             'videos' => $last20videos,
             'formSearch'=> $form->createView(),
@@ -101,6 +100,8 @@ class VideoController extends AbstractController
             $video->setTutuber($user);
             $entityManager->persist($video);
             $entityManager->flush();
+            return $this->redirectToRoute('home');
+
         }
 
 
@@ -207,6 +208,7 @@ class VideoController extends AbstractController
                 $manager->flush();
                 return $this->redirectToRoute('tutuber_page',array(
                     'tutuber' => $user->getPseudo(),
+                    'tutuberId' => $user->getId(),
                 ));
             }
         }
@@ -226,12 +228,12 @@ class VideoController extends AbstractController
         shuffle($userWithLessThan100Views);
         $idOfTutuber = $userWithLessThan100Views[0]->getId();
 
-        // dd($rand);
+
         $videoOfSelectedTutuber = $videoRepo->findBy(['tutuber' => $idOfTutuber ]);
         shuffle($videoOfSelectedTutuber);
         // dd($videoOfSelectedTutuber[0]);
-        $viewsOfVideo = $videoOfSelectedTutuber[0]->getViews();
 
+        $viewsOfVideo = $videoOfSelectedTutuber;
 
         return $this->render('video/discoveryVideo.html.twig', [
             'randomVideo' => $videoOfSelectedTutuber[0],

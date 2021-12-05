@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" type="text/css"
+            href="/assets/css/reset.css" media="all" />
+        <title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+
+		{% block cdn %}		
+
+		{% endblock %}
+		
+		{% block javascripts %}
+
+		{% endblock %}
+	</head>
+	<body>
+    <style>
+        html {
+            height: 100%;
+            width: 100%;
+        }
+        .navBar {
+            height: 100px;
+            width: 100%;
+            background-color: #202020;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .navBar > div > a {
+            padding: 10px 15px;
+            text-decoration: none;
+            color: white;
+            font-size: 23px;
+            border-radius: 10px;
+            margin: 20px;
+        }
+        .body::-webkit-scrollbar{
+            display: none; /* Chrome*/
+        }
+        .body {
+            
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+            height: 100%;
+        }
+        .hover:hover {
+            background-color: grey;
+        }
+
+    </style>
+      {% block style %}
+      
+      {% endblock %}
+        <div class="navBar">
+            <div>
+                <a class="hover" href="{{ path('home')}}">Acceuil</a>
+                <a class="hover" href="{{ path('trending_page')}}">Tendance</a>
+                <a class="hover" href="{{ path('discorvery_page')}}">Découverte</a>
+
+                {% if is_granted("ROLE_USER") %}
+                    <a class="hover" href="{{ path('upload_video')}}">Upload une video</a>
+                    <a class="hover" href="{{ path('user_subs')}}">Mes Abonnement</a>
+                {% endif %}
+            </div>
+            <div>
+                {% if is_granted("ROLE_ADMIN") %}
+                    <a class="btn btn-info" href="{{ path('admin_page')}}">Back-Office</a>
+                {% endif %}
+
+                {% if is_granted("ROLE_USER") %}
+                    <a class="hover" href="{{ path('app_logout')}}">Logout</a>
+                {% else %}
+                    <a class="hover" href="{{ path('app_login')}}">Login</a>
+                    <a class="hover" href="{{ path('app_register')}}">S'inscrire</a>
+
+                {% endif %}
+            </div>
+        </div>
+        <div class="body">
+            {% block body %}
+    
+            {% endblock %}
+
+        </div>
+	</body>
+</html>

@@ -1,5 +1,5 @@
-{% extends 'base.html.twig' %} {% block title %}Hello VideoController!{%
-    endblock %} {% block body %}
+{% extends 'baseLocal.html.twig' %} {% block title %}Hello VideoController!{%
+  endblock %} {% block body %}
     <style>
       .comment {
         padding: 20px;
@@ -13,7 +13,24 @@
       }
       .videoFull > iframe{
         width: 80%;
-        height: 700px;
+        height: 900px;
+      }
+      .dataVideo {
+        /* margin-left: %;
+        margin-right: 7%; */
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+      .dataVideo > div {
+        width: 80%;
+      }
+      .name {
+        font-size: 30px;
+        font-weight: 600;
+      }
+      .vue {
+        font-size: 25px;
       }
     </style>
     
@@ -22,15 +39,28 @@
         <iframe
           width="1669"
           height="700"
-          src="https://www.youtube.com/embed/{{ randomVideo.url_id }}"
+          src="https://www.youtube.com/embed/{{ randomVideo.url_id }}?autoplay=1"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
         ></iframe>
       </div>
-      <p> titre : {{ randomVideo.name }}</p>
-      <p> vue : {{ views }} </p>
+      <div class="dataVideo">
+        <div>
+          <p class="name">{{ randomVideo.name }}</p>
+          <p class="vue">{{ views }}
+            {% if views > 1 %} vues 
+            {% else %} vue
+            {% endif %}
+          </p>
+          <div class="descBar"></div>
+          <div class="descBarFinnish"></div>
+        </div>
+    
+    
+      </div>
+    
     </div>
     {% endblock %}
     

@@ -1,10 +1,29 @@
-{% extends 'base.html.twig' %} {% block title %}Hello VideoController!{%
+{% extends 'baseLocal.html.twig' %} {% block title %}Hello VideoController!{%
 endblock %} {% block body %}
 <style>
   .comment {
-    padding: 20px;
-    width: 35%;
-    border: 2px solid black;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .comment > div {
+    padding: 23px;
+    width: 55%;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    box-shadow: -1px 2px 12px -4px #3EA6FF ;
+    -webkit-box-shadow: -1px 2px 12px -4px #3EA6FF ;
+    -moz-box-shadow: -1px 2px 12px -4px #3EA6FF ;
+  }
+  .comment > div > p:nth-child(1) {
+    font-weight: 600;
+    font-size: 20px;
+  }
+  .comment > div > p:nth-child(2) {
+    font-weight: 600;
+    font-size: 18px;
   }
   .videoFull {
     display: flex;
@@ -13,42 +32,127 @@ endblock %} {% block body %}
   }
   .videoFull > iframe{
     width: 80%;
-    height: 700px;
+    height: 900px;
   }
+  .searchInput{
+        width: 100%;
+        height: 70px;
+  }
+
+  label[for=comment_Content]
+  {
+    display: none;
+  }
+
+  .name {
+    font-size: 30px;
+    font-weight: 600;
+  }
+  .vue {
+    font-size: 25px;
+
+  }
+  .dataVideo {
+    /* margin-left: %;
+    margin-right: 7%; */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .dataVideo > div {
+    width: 80%;
+  }
+  .descBar {
+    width: 98%;
+    height: 1px;
+    margin-left: 1%;
+    margin-right: 1%;
+    background-color: #303030;
+  }
+  .description {
+    margin-left: 1%;
+    margin-top: 10px;
+    font-size: 23px;
+  }
+
+  .descBarFinnish {
+    width: 100%;
+    height: 2px;
+    background-color: #303030;
+  }
+
+  .comments {
+    margin-top: 20px;
+  }
+
+  .commentBtn {
+    background-color: #3EA6FF;
+    border: none;
+    border-radius: 5px;
+    padding: 15px 20px;
+    letter-spacing: 3px;
+    font-weight: 600;
+  }
+  
 </style>
 
 <div class="">
   <div class="videoFull">
     <iframe
       width="1669"
-      height="700"
-      src="https://www.youtube.com/embed/{{ url }}"
+      height="1200"
+      src="https://www.youtube.com/embed/{{ url }}?autoplay=1"
       title="YouTube video player"
       frameborder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       allowfullscreen
     ></iframe>
   </div>
-  <p> titre : {{ video.name }}</p>
-  <p> vue : {{ views }} </p>
-  <p> Description : {{ video.description }} </p>
+  <div class="dataVideo">
+    <div>
+      <p class="name">{{ video.name }}</p>
+      <p class="vue">{{ views }}
+        {% if views > 1 %} vues 
+        {% else %} vue
+        {% endif %}
+      </p>
+      <div class="descBar"></div>
+      <p class="description">{{ video.description }} </p>
+      <div class="descBarFinnish"></div>
 
-  <div class="comments">
-    {% if userConnected %}
-      <div class="commentForm">
-        {{ form_start(commentForm) }}
-          {{ form_row(commentForm.Content) }}
-    
-          <button type="submit" class="btn">Commentez</button>
-        {{ form_end(commentForm) }}
+      <div class="comments">
+        {% if userConnected %}
+        <p>{{ comments|length }} {% if comments|length > 1 %} Commentaires
+          {% else %} Commentaire
+          {% endif %}
+        </p>
+        <p>Commentaire</p> 
+          <div class="commentForm">
+            {{ form_start(commentForm) }}
+              {{ form_row(commentForm.Content, {
+                'label': 'Commentaire',
+                'attr': {'class': 'searchInput'}
+              }) }}
+              <div>
+                <button type="submit" class="commentBtn">AJOUTER UN COMMENTAIRE</button>
+              </div>
+            {{ form_end(commentForm) }}
+          </div>
+        {% endif %}
+        {% for comment in comments %}
+          <div class="comment"> 
+            <div>
+              <p>{{ comment.Author }}</p>
+              <p>{{ comment.Content }}</p>
+            </div>
+          </div>
+        {% endfor %}
       </div>
-    {% endif %}
-    {% for comment in comments %}
-      <div class="comment"> 
-        <p>{{ comment.Author }}</p>
-        <p>{{ comment.Content }}</p>
-      </div>
-    {% endfor %}
+    </div>
+
+
   </div>
+
+  
 </div>
 {% endblock %}

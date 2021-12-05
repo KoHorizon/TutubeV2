@@ -1,9 +1,9 @@
-{% extends 'base.html.twig' %} {% block title %}Hello VideoController!{% endblock %} 
+{% extends 'baseLocal.html.twig' %} {% block title %}Hello VideoController!{% endblock %} 
 {% block body %}
     <style>
-    body {
-        margin-left: 3%;
-        margin-right: 3%;
+    .body {
+        margin-left: 6%;
+        margin-right: 6%;
     }
     .videos {
         /* display: flex; */
@@ -13,17 +13,13 @@
         display: grid;
         grid-template-columns: repeat(auto-fill,570px);   
     }
-    .btn {
-        padding: 10px;
-        background-color: red;
-        color: white;
-    }
+  
     </style>
     <div class="stat">
         {% if user != tutuber and isSubbed == false %}
-            <a class="btn" href="{{ path('subscribeFunction', {tutuber_id : tutuber.id } ) }}">Subscribe</a>
+            <a class="btn btn-primary" href="{{ path('subscribeFunction', {tutuber_id : tutuber.id } ) }}">Subscribe</a>
         {% elseif isSubbed == true  %}
-        <a class="btn" href="{{ path('unsubscribeFunction', {tutuber_id : tutuber.id } ) }}">Unsub</a>
+            <a class="btn btn-danger" href="{{ path('unsubscribeFunction', {tutuber_id : tutuber.id } ) }}">Unsub</a>
         {% endif %}
 
 

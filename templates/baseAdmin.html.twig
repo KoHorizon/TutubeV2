@@ -11,13 +11,10 @@
 		</title>
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
-
 		{% block cdn %}		
-
 		{% endblock %}
 		
 		{% block javascripts %}
-
 		{% endblock %}
 	</head>
 	<body>
@@ -96,8 +93,9 @@
                 {% else %} 
                     <a class="href" href="{{ path('admin_show_listTutubers') }}">Tutubers </a>
                 {% endif %}
+                <a class="" href="{{ path('home')}}">Quittez le Back-office</a>
+
             </div>
-        
         </div>
         <div class="body">
             {% block body %}

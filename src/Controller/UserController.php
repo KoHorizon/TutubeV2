@@ -19,9 +19,17 @@ class UserController extends AbstractController
             'controller_name' => 'UserController',
         ]);
     }
-
     /**
-     * @Route("/user/feed/subscriptions", name="user")
+     * @Route("/user/page", name="userPageRedirect")
+     */
+    public function userPage(): Response
+    {
+        return $this->render('user/index.html.twig', [
+            'controller_name' => 'UserController',
+        ]);
+    }
+    /**
+     * @Route("/user/feed/subscriptions", name="user_subs")
      */
     public function subedPage(VideoRepository $VideoRepo, UserRepository $userRepo): Response
     {   
